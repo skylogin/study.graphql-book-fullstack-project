@@ -40,3 +40,7 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 ## dev 01 (project 폴더 > server)
 
 - `yarn add type-graphql`
+
+## dev 01 (project 폴더 > web)
+
+- `yarn add @apollo/client graphql`
