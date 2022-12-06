@@ -5,22 +5,18 @@ import {
 	ApolloServerPluginLandingPageLocalDefault
 } from 'apollo-server-core';
 import http from 'http';
+import { buildSchema } from 'type-graphql';
+import { FilmResolver } from './resolvers/Film';
 
 
 async function main(){
 	const app = express();
 
 	const apolloServer = new ApolloServer({
-		typeDefs: gql`
-			type Query {
-				hello: String
-			}
-		`,
-		resolvers: {
-			Query: {
-				hello: () => `Hello World`,
-			},
-		},
+
+		schema: await buildSchema({
+			resolvers: [FilmResolver],
+		}),
 		plugins: [ApolloServerPluginLandingPageLocalDefault()],
 	});
 	await apolloServer.start();
