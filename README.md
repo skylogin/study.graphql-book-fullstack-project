@@ -45,3 +45,4 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 
 - `yarn add @apollo/client graphql`
 - `yarn add --dev @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo @graphql-codegen/add`
+- `yarn add react-waypoint`

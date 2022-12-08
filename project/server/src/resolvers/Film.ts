@@ -1,4 +1,13 @@
-import { Arg, Field, Int, ObjectType, Query, Resolver, FieldResolver, Root } from 'type-graphql';
+import {
+  Arg,
+  Field,
+  Int,
+  ObjectType,
+  Query,
+  Resolver,
+  FieldResolver,
+  Root,
+} from 'type-graphql';
 import ghibliData from '../data/ghibli';
 import { Film } from '../entities/Film';
 import { Director } from '../entities/Director';
@@ -13,19 +22,19 @@ class PaginatedFilms {
 }
 
 @Resolver(Film)
-export class FilmResolver{
+export class FilmResolver {
   @Query(() => PaginatedFilms)
   films(
-    @Arg( 'limit', () => Int, { nullable: true, defaultValue: 6 }) limit: number,
-    @Arg( 'cursor', () => Int, { nullable: true, defaultValue: 1 })
+    @Arg('limit', () => Int, { nullable: true, defaultValue: 6 }) limit: number,
+    @Arg('cursor', () => Int, { nullable: true, defaultValue: 1 })
     cursor: Film['id'],
   ): PaginatedFilms {
     const realLimit = Math.min(6, limit);
 
-    if(!cursor) return { films: [] };
+    if (!cursor) return { films: [] };
 
     const cursorDataIndex = ghibliData.films.findIndex((f) => f.id === cursor);
-    if(cursorDataIndex === -1) return { films: [] };
+    if (cursorDataIndex === -1) return { films: [] };
 
     const result = ghibliData.films.slice(
       cursorDataIndex,
@@ -36,11 +45,10 @@ export class FilmResolver{
     const hasNext = ghibliData.films.findIndex((f) => f.id === nextCursor) > -1;
 
     return {
-      cursor: hasNext? nextCursor: null,
+      cursor: hasNext ? nextCursor : null,
       films: result,
-    }
+    };
   }
-
 
   @FieldResolver(() => Director)
   director(@Root() parentFilm: Film): Director | undefined {

@@ -59,6 +59,12 @@ module.exports = {
     // typescript
     '@typescript-eslint/no-use-before-define': 2,
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'prettier/prettier' : [
+      'error',
+      {
+        endOfLine: 'auto',
+      }
+    ]
   },
   ignorePatterns: ['generated/**/*.tsx'],
   settings: {
