@@ -51,3 +51,5 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 
 - `yarn add react-router-dom@5.2`
 - `yarn add --dev @types/react-router-dom@5.1.7`
+- `yarn add react-lazyload`
+- `yarn add --dev @types/react-lazyload`
