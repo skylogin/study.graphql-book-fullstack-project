@@ -46,3 +46,8 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 - `yarn add @apollo/client graphql`
 - `yarn add --dev @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo @graphql-codegen/add`
 - `yarn add react-waypoint`
+
+## dev 02 (project 폴더 > web)
+
+- `yarn add react-router-dom@5.2`
+- `yarn add --dev @types/react-router-dom@5.1.7`
