@@ -7,6 +7,7 @@ import {
 import http from 'http';
 import { buildSchema } from 'type-graphql';
 import { FilmResolver } from './resolvers/Film';
+import { CutResolver } from './resolvers/Cut';
 
 
 async function main(){
@@ -15,7 +16,7 @@ async function main(){
 	const apolloServer = new ApolloServer({
 
 		schema: await buildSchema({
-			resolvers: [FilmResolver],
+			resolvers: [FilmResolver, CutResolver],
 		}),
 		plugins: [ApolloServerPluginLandingPageLocalDefault()],
 	});
