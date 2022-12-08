@@ -1,7 +1,16 @@
 import {
-  AspectRatio, Box, Heading, Image, LinkBox, Stack, Text, useColorModeValue
+  AspectRatio, 
+  Box, 
+  Heading, 
+  Image, 
+  LinkBox, 
+  Stack, 
+  Text, 
+  useColorModeValue,
+  LinkOverlay
 } from '@chakra-ui/react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FilmsQuery } from '../../generated/graphql';
 
 interface FilmCardProps {
@@ -10,7 +19,7 @@ interface FilmCardProps {
 
 export default function FilmCard({ film }: FilmCardProps): React.ReactElement {
   return (
-    <LinkBox as="article" my={6}>
+    <LinkBox>
       <Box
         maxW="300px"
         w="full"
@@ -25,16 +34,18 @@ export default function FilmCard({ film }: FilmCardProps): React.ReactElement {
           </AspectRatio>
         </Box>
         <Stack>
-          <Heading
-            color={useColorModeValue('gray.700', 'white')}
-            fontSize="x1"
-            fontFamily="body"
-          >
-            {film.title}
-          </Heading>
-          <Text fontSize="sm" color="gray.500" isTruncated>
-            {film.subtitle? film.subtitle: <>&nbsp;</>}
-          </Text>
+          <LinkOverlay as={Link} to={`/film/${film.id}`}>
+            <Heading
+              color={useColorModeValue('gray.700', 'white')}
+              fontSize="x1"
+              fontFamily="body"
+            >
+              {film.title}
+            </Heading>
+            <Text fontSize="sm" color="gray.500" isTruncated>
+              {film.subtitle? film.subtitle: <>&nbsp;</>}
+            </Text>
+          </LinkOverlay>
         </Stack>
         <Stack spacing={0} fontSize="sm" mt={2}>
           <Text as="time" dateTime={film.release} isTruncated color="gray.500">
