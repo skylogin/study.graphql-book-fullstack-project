@@ -57,3 +57,4 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 ## dev 03 (project 폴더 > server)
 
 - `yarn add typeorm mysql2`
+- `yarn add class-validator argon2`

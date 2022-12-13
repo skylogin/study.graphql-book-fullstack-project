@@ -1,5 +1,7 @@
 import { Connection, createConnection } from 'typeorm';
 
+import User from '../entities/User';
+
 export const createDB = async (): Promise<Connection> =>
   createConnection({
     type: 'mysql',
@@ -10,5 +12,5 @@ export const createDB = async (): Promise<Connection> =>
     password: 'qwer1234',
     logging: !(process.env.NODE_ENV === 'production'),
     synchronize: true,
-    entities: [],
+    entities: [User],
   });
