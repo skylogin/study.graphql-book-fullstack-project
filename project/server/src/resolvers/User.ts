@@ -1,14 +1,18 @@
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import { IsEmail, IsString } from 'class-validator';
-import { 
-  Arg, 
-  Field, 
-  InputType, 
-  Mutation, 
+import {
+  Arg,
+  Field,
+  InputType,
+  Mutation,
   Resolver,
   ObjectType,
 } from 'type-graphql';
+
 import User from '../entities/User';
+
+import { createAccessToken } from '../utils/jwt-auth';
 
 @InputType()
 export class SignUpInput {
@@ -68,6 +72,7 @@ export class UserResolver {
   ): Promise<LoginResponse> {
     const { emailOrUsername, password } = loginInput;
 
+    // 유저 확인절차
     const user = await User.findOne({
       where: [{ email: emailOrUsername }, { username: emailOrUsername }],
     });
@@ -86,6 +91,9 @@ export class UserResolver {
         ],
       };
 
-    return { user };
+    // 액세스 토큰 발급
+    const accessToken = createAccessToken(user);
+
+    return { user, accessToken };
   }
 }
