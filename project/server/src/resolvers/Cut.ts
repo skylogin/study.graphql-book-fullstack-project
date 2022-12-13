@@ -1,11 +1,4 @@
-import { 
-  Arg, 
-  Int, 
-  Query, 
-  Resolver, 
-  FieldResolver, 
-  Root 
-} from 'type-graphql';
+import { Arg, Int, Query, Resolver, FieldResolver, Root } from 'type-graphql';
 import ghibliData from '../data/ghibli';
 import { Film } from '../entities/Film';
 import { Cut } from '../entities/Cut';
