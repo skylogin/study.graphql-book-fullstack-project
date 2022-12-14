@@ -13,11 +13,16 @@ import {
   UseMiddleware,
 } from 'type-graphql';
 
-import User from '../entities/User';
+import {
+  createAccessToken,
+  createRefreshToken,
+  setRefreshTokenHeader,
+} from '../utils/jwt-auth';
 
-import { createAccessToken } from '../utils/jwt-auth';
 import { MyContext } from '../apollo/createApolloServer';
 import { isAuthenticated } from '../middlewares/isAuthenticated';
+
+import User from '../entities/User';
 
 @InputType()
 export class SignUpInput {
@@ -81,6 +86,7 @@ export class UserResolver {
   @Mutation(() => LoginResponse)
   public async login(
     @Arg('loginInput') loginInput: LoginInput,
+    @Ctx() { res }: MyContext,
   ): Promise<LoginResponse> {
     const { emailOrUsername, password } = loginInput;
 
@@ -103,8 +109,10 @@ export class UserResolver {
         ],
       };
 
-    // 액세스 토큰 발급
+    // 액세스, 리프레시 토큰 발급
     const accessToken = createAccessToken(user);
+    const refreshToken = createRefreshToken(user);
+    setRefreshTokenHeader(res, refreshToken);
 
     return { user, accessToken };
   }
