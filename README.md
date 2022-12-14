@@ -62,6 +62,8 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 - `yarn add --dev @types/nanoid @types/jsonwebtoken`
 - `yarn add ioredis`
 - `yarn add --dev @types/ioredis`
+- `yarn add cookie-parser`
+- `yarn add --dev @types/cookie-parser`
 
 ## dev 04 (project 폴더 > web)
 

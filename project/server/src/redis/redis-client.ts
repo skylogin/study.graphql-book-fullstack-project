@@ -1,9 +1,9 @@
 import Redis from 'ioredis';
 
 const redis = new Redis({
-  host: '152.70.247.215',
+  host: process.env.REDIS_HOST,
   port: 6379,
-  password: 'fpeltm#1234',
+  password: process.env.REDIS_PASSWORD,
 });
 
 export default redis;

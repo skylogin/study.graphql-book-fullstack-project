@@ -5,6 +5,9 @@ import http from 'http';
 import { createDB } from './db/db-client';
 import createApolloServer from './apollo/createApolloServer';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
+
 async function main() {
   await createDB();
   const app = express();
