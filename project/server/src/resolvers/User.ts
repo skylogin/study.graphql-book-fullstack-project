@@ -86,7 +86,7 @@ export class UserResolver {
   @Mutation(() => LoginResponse)
   public async login(
     @Arg('loginInput') loginInput: LoginInput,
-    @Ctx() { res }: MyContext,
+    @Ctx() { res, redis }: MyContext,
   ): Promise<LoginResponse> {
     const { emailOrUsername, password } = loginInput;
 
@@ -112,6 +112,8 @@ export class UserResolver {
     // 액세스, 리프레시 토큰 발급
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
+
+    await redis.set(String(user.id), refreshToken);
     setRefreshTokenHeader(res, refreshToken);
 
     return { user, accessToken };
