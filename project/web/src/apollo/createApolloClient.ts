@@ -1,11 +1,20 @@
-import { ApolloClient, from, HttpLink, NormalizedCacheObject } from "@apollo/client";
+import { ApolloClient, from, fromPromise, HttpLink, NormalizedCacheObject } from "@apollo/client";
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 
 import { createApolloCache } from "./createApolloCache";
+import { refreshAccessToken } from "./auth";
 
-const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
+let apolloClient: ApolloClient<NormalizedCacheObject>;
+
+const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors){
+    if (graphQLErrors.find((err) => err.message === 'access token expired')) {
+      return fromPromise(refreshAccessToken(apolloClient, operation))
+        .filter((result) => !!result)
+        .flatMap(() => forward(operation));
+    }
+    
     graphQLErrors.forEach(({ message, locations, path }) =>
       console.log(
         `[GraphQL error]: -> ${operation.operationName}
@@ -30,13 +39,17 @@ const authLink = setContext((request, prevContext) => {
   return {
     headers: {
       ...prevContext.headers,
-      Authorization: accessToken ? `Baarer ${accessToken}` : '',
+      Authorization: accessToken ? `Bearer ${accessToken}` : '',
     },
   };
 });
 
-export const createApolloClient = (): ApolloClient<NormalizedCacheObject> =>
-  new ApolloClient({
+export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
+  apolloClient = new ApolloClient({
     cache: createApolloCache(),
     link: from([authLink, errorLink, httpLink]),
   });
+
+  return apolloClient;
+}
+  
