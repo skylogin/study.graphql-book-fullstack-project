@@ -16,10 +16,11 @@ export const isAuthenticated: MiddlewareFn<MyContext> = async (
   const accessToken = authorization.split(' ')[1];
   verifyAccessToken(accessToken);
 
-  if (!context.verifiedUser) throw new AuthenticationError('unauthenticated');
-  return next();
-
-  // const result = verifyAccessTokenFromReqHeaders(context.req.headers);
-  // if (!context.verifiedUser || !result) throw new AuthenticationError('unauthenticated');
+  // if (!context.verifiedUser) throw new AuthenticationError('unauthenticated');
   // return next();
+
+  const result = verifyAccessTokenFromReqHeaders(context.req.headers);
+  if (!context.verifiedUser || !result)
+    throw new AuthenticationError('unauthenticated');
+  return next();
 };

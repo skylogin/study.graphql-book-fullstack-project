@@ -4,10 +4,13 @@ import { AuthenticationError } from 'apollo-server-express';
 import { IncomingHttpHeaders } from 'http';
 import { Response } from 'express';
 
-import User from '../entities/User';
+import {
+  NODE_ENV,
+  DEFAULT_JWT_SECRET_KEY,
+  REFRESH_JWT_SECRET_KEY,
+} from '../constants/constants';
 
-export const DEFAULT_JWT_SECRET_KEY = 'secret-key';
-export const REFRESH_JWT_SECRET_KEY = 'secret-key2';
+import User from '../entities/User';
 
 export interface JwtVerifiedUser {
   userId: User['id'];
@@ -19,37 +22,13 @@ const createToken = (user: User, token: string, expire: string) => {
 };
 
 export const createAccessToken = (user: User): string => {
-  const expire = '30m';
-  return createToken(
-    user,
-    process.env.JWT_SCRET_KEY || DEFAULT_JWT_SECRET_KEY,
-    expire,
-  );
-
-  // const userData: JwtVerifiedUser = { userId: user.id };
-  // const accessToken = jwt.sign(
-  //   userData,
-  //   process.env.JWT_SCRET_KEY || DEFAULT_JWT_SECRET_KEY,
-  //   { expiresIn: '30m' },
-  // );
-
-  // return accessToken;
+  const expire = '10s';
+  return createToken(user, DEFAULT_JWT_SECRET_KEY, expire);
 };
 
 export const createRefreshToken = (user: User): string => {
   const expire = '14d';
-  return createToken(
-    user,
-    process.env.JWT_REFRESH_SECRET_KEY || REFRESH_JWT_SECRET_KEY,
-    expire,
-  );
-
-  // const userData: JwtVerifiedUser = { userId: user.id };
-  // return jwt.sign(
-  //   userData,
-  //   process.env.JWT_REFRESH_SECRET_KEY || REFRESH_JWT_SECRET_KEY,
-  //   { expiresIn: '14d' },
-  // );
+  return createToken(user, REFRESH_JWT_SECRET_KEY, expire);
 };
 
 export const setRefreshTokenHeader = (
@@ -58,7 +37,7 @@ export const setRefreshTokenHeader = (
 ): void => {
   res.cookie('refreshtoken', refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: NODE_ENV === 'production',
     sameSite: 'lax',
   });
 };
@@ -70,7 +49,7 @@ export const verifyAccessToken = (
   try {
     const verified = jwt.verify(
       accessToken,
-      process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY,
+      DEFAULT_JWT_SECRET_KEY,
     ) as JwtVerifiedUser;
 
     return verified;

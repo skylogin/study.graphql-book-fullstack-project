@@ -1,18 +1,19 @@
 import 'reflect-metadata';
 import express from 'express';
 import http from 'http';
+import cookieParser from 'cookie-parser';
 
 import { createDB } from './db/db-client';
 import createApolloServer from './apollo/createApolloServer';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
+import { PORT, NODE_ENV } from './constants/constants';
 
 async function main() {
   await createDB();
   const app = express();
-  const apolloServer = await createApolloServer();
+  app.use(cookieParser());
 
+  const apolloServer = await createApolloServer();
   await apolloServer.start();
   apolloServer.applyMiddleware({
     app,
@@ -24,8 +25,8 @@ async function main() {
 
   const httpServer = http.createServer(app);
 
-  httpServer.listen(process.env.PORT || 4000, () => {
-    if (process.env.NODE_ENV !== 'production') {
+  httpServer.listen(PORT || 4000, () => {
+    if (NODE_ENV !== 'production') {
       console.log(`
 				server started on => http://localhost:4000
 				graphql playground => http://localhost:4000/graphql

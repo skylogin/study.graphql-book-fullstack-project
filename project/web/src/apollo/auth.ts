@@ -18,8 +18,7 @@ export const refreshAccessToken = (
         localStorage.setItem('access_token', '');
         return false;
       }
-
-      localStorage.setitem('access_token', newAccessToken);
+      localStorage.setItem('access_token', newAccessToken);
       const prevContext = operation.getContext();
       operation.setContext({
         headers: {
@@ -29,7 +28,8 @@ export const refreshAccessToken = (
       });
       return true;
     })
-    .catch(() => {
+    .catch((e) => {
+      console.error(e);
       localStorage.setitem('access_token', '');
       return false;
     });

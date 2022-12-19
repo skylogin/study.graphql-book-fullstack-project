@@ -1,16 +1,25 @@
 import { Connection, createConnection } from 'typeorm';
 
+import {
+  NODE_ENV,
+  DB_HOST,
+  DB_PORT,
+  DB_DATABASE,
+  DB_USERNAME,
+  DB_PASSWORD,
+} from '../constants/constants';
+
 import User from '../entities/User';
 
 export const createDB = async (): Promise<Connection> =>
   createConnection({
     type: 'mysql',
-    host: process.env.DB_HOST,
-    port: 3306,
-    database: process.env.DB_DATABASE,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    logging: !(process.env.NODE_ENV === 'production'),
+    host: DB_HOST,
+    port: DB_PORT,
+    database: DB_DATABASE,
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
+    logging: !(NODE_ENV === 'production'),
     synchronize: true,
     entities: [User],
   });
