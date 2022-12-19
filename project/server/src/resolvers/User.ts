@@ -126,6 +126,18 @@ export class UserResolver {
     return { user, accessToken };
   }
 
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async logout(
+    @Ctx() { verifiedUser, res, redis }: MyContext,
+  ): Promise<boolean> {
+    if (verifiedUser) {
+      setRefreshTokenHeader(res, '');
+      await redis.del(String(verifiedUser.userId));
+    }
+    return true;
+  }
+
   @Mutation(() => RefreshAccessTokenResponse, { nullable: true })
   async refreshAccessToken(
     @Ctx() { req, redis, res }: MyContext,
