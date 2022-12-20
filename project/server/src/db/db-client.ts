@@ -10,6 +10,7 @@ import {
 } from '../constants/constants';
 
 import User from '../entities/User';
+import { CutVote } from '../entities/CutVote';
 
 export const createDB = async (): Promise<Connection> =>
   createConnection({
@@ -21,5 +22,5 @@ export const createDB = async (): Promise<Connection> =>
     password: DB_PASSWORD,
     logging: !(NODE_ENV === 'production'),
     synchronize: true,
-    entities: [User],
+    entities: [User, CutVote],
   });
