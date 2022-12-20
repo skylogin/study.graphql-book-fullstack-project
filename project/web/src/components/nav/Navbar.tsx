@@ -1,25 +1,54 @@
+import { useApolloClient } from '@apollo/client';
 import {
   Avatar,
   Box,
   Button,
   Flex,
   Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useMeQuery } from '../../generated/graphql';
+import { useLogoutMutation, useMeQuery } from '../../generated/graphql';
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
 
 const LoggedInNavbarItem = (): JSX.Element => {
+  const client = useApolloClient();
+  const [logout, { loading: logoutLoading }] = useLogoutMutation();
+
+  async function onLogoutClick() {
+    try{
+      await logout();
+      localStorage.removeItem('access_token');
+      // await client.resetStore(); 에서 아래 구문으로 변경하여 예외 발생하지 않도록 조정
+      await client.cache.reset();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <Stack justify="flex-end" alignItems="center" direction="row" spacing={3}>
       <ColorModeSwitcher />
-      <Avatar size="sm" />
+
+      <Menu>
+        <MenuButton as={Button} rounded="full" variant="link" cursor="pointer">
+          <Avatar size="sm" />
+        </MenuButton>
+        <MenuList>
+          <MenuItem isDisabled={logoutLoading} onClick={onLogoutClick}>
+            로그아웃
+          </MenuItem>
+        </MenuList>
+      </Menu> 
     </Stack>
-  )
-}
+  );
+};
 
 export default function Navbar(): JSX.Element {
   const accessToken = localStorage.getItem('access_token');
