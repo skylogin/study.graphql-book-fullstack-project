@@ -1,7 +1,22 @@
-import { Arg, Int, Query, Resolver, FieldResolver, Root } from 'type-graphql';
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Int,
+  Query,
+  Resolver,
+  FieldResolver,
+  Root,
+  UseMiddleware,
+} from 'type-graphql';
+
+import { isAuthenticated } from '../middlewares/isAuthenticated';
+import { MyContext } from '../apollo/createApolloServer';
 import ghibliData from '../data/ghibli';
+
 import { Film } from '../entities/Film';
 import { Cut } from '../entities/Cut';
+import { CutVote } from '../entities/CutVote';
 
 @Resolver(Cut)
 export class CutResolver {
@@ -18,5 +33,31 @@ export class CutResolver {
   @FieldResolver(() => Film, { nullable: true })
   film(@Root() cut: Cut): Film | undefined {
     return ghibliData.films.find((film) => film.id === cut.filmId);
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async vote(
+    @Arg('cutId', () => Int) cutId: number,
+    @Ctx() { verifiedUser }: MyContext,
+  ): Promise<boolean> {
+    if (verifiedUser) {
+      const { userId } = verifiedUser;
+      const alreadyVoted = await CutVote.findOne({
+        where: {
+          cutId,
+          userId,
+        },
+      });
+
+      if (alreadyVoted) {
+        await alreadyVoted.remove();
+        return true;
+      }
+      const vote = CutVote.create({ cutId, userId });
+      await vote.save();
+      return true;
+    }
+    return false;
   }
 }
