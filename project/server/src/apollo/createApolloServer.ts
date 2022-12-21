@@ -4,6 +4,8 @@ import { buildSchema } from 'type-graphql';
 
 import { Request, Response } from 'express';
 
+import { createCutVoteLoader } from '../dataloader/cutVoteLoader';
+
 import { FilmResolver } from '../resolvers/Film';
 import { CutResolver } from '../resolvers/Cut';
 import { UserResolver } from '../resolvers/User';
@@ -19,6 +21,7 @@ export interface MyContext {
   res: Response;
   verifiedUser: JwtVerifiedUser;
   redis: typeof redis;
+  cutVoteLoader: ReturnType<typeof createCutVoteLoader>;
 }
 
 const createApolloServer = async (): Promise<ApolloServer> => {
@@ -29,7 +32,13 @@ const createApolloServer = async (): Promise<ApolloServer> => {
     plugins: [ApolloServerPluginLandingPageLocalDefault()],
     context: ({ req, res }) => {
       const verified = verifyAccessTokenFromReqHeaders(req.headers);
-      return { req, res, verifiedUser: verified, redis };
+      return {
+        req,
+        res,
+        verifiedUser: verified,
+        redis,
+        cutVoteLoader: createCutVoteLoader(),
+      };
     },
   });
 };

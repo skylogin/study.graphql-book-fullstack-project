@@ -68,3 +68,7 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 ## dev 04 (project 폴더 > web)
 
 - `yarn add react-hook-from`
+
+## dev 05 (project 폴더 > server)
+
+- `yarn add dataloader`

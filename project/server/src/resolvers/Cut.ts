@@ -62,8 +62,25 @@ export class CutResolver {
   }
 
   @FieldResolver(() => Int)
-  async votesCount(@Root() cut: Cut): Promise<number> {
-    const count = await CutVote.count({ where: { cutId: cut.id } });
-    return count;
+  async votesCount(
+    @Root() cut: Cut,
+    @Ctx() { cutVoteLoader }: MyContext,
+  ): Promise<number> {
+    const cutVotes = await cutVoteLoader.load({ cutId: cut.id });
+    return cutVotes.length;
+  }
+
+  @FieldResolver(() => Boolean)
+  async isVoted(
+    @Root() cut: Cut,
+    @Ctx() { cutVoteLoader, verifiedUser }: MyContext,
+  ): Promise<boolean> {
+    if (verifiedUser) {
+      const votes = await cutVoteLoader.load({ cutId: cut.id });
+      if (votes.some((vote) => vote.userId === verifiedUser.userId))
+        return true;
+      return false;
+    }
+    return false;
   }
 }
