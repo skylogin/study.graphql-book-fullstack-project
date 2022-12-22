@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 
 import { CutVote } from './CutVote';
+import { CutReview } from './CutReview';
 
 @ObjectType()
 @Entity()
@@ -39,4 +40,7 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => CutVote, (cutVote) => cutVote.user)
   cutVotes: CutVote[];
+
+  @OneToMany(() => CutReview, (cutReview) => cutReview.user)
+  cutReviews: CutReview[];
 }
