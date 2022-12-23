@@ -127,4 +127,13 @@ export class CutReviewResolver {
     }
     return false;
   }
+
+  @FieldResolver(() => Boolean)
+  isMine(
+    @Root() cutReview: CutReview,
+    @Ctx() { verifiedUser }: MyContext,
+  ): boolean {
+    if (!verifiedUser) return false;
+    return cutReview.userId === verifiedUser.userId;
+  }
 }
