@@ -9,6 +9,7 @@ import { createCutVoteLoader } from '../dataloader/cutVoteLoader';
 import { FilmResolver } from '../resolvers/Film';
 import { CutResolver } from '../resolvers/Cut';
 import { UserResolver } from '../resolvers/User';
+import { CutReviewResolver } from '../resolvers/CutReview';
 
 import {
   JwtVerifiedUser,
@@ -27,7 +28,7 @@ export interface MyContext {
 const createApolloServer = async (): Promise<ApolloServer> => {
   return new ApolloServer<MyContext>({
     schema: await buildSchema({
-      resolvers: [FilmResolver, CutResolver, UserResolver],
+      resolvers: [FilmResolver, CutResolver, UserResolver, CutReviewResolver],
     }),
     plugins: [ApolloServerPluginLandingPageLocalDefault()],
     context: ({ req, res }) => {
