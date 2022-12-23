@@ -9,9 +9,15 @@ import {
   ModalFooter,
   ModalHeader, 
   ModalOverlay, 
-  Textarea 
+  Textarea,
+  useToast,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
+
+import {
+  CreateOrUpdateCutReviewMutationVariables as CutReviewVars,
+  useCreateOrUpdateCutReviewMutation as useCreateCutReview,
+} from '../../generated/graphql'
 
 export interface FilmCutReviewRegiModalProps {
   cutId: number;
@@ -24,21 +30,29 @@ export function FilmCutReviewRegiModal({
   isOpen,
   onClose,
 }: FilmCutReviewRegiModalProps): JSX.Element {
+  const toast = useToast();
+  const [mutation, { loading }] = useCreateCutReview();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<CutReviewVars>({
     defaultValues: {
       cutReviewInput: { 
         cutId,
-        contents: '',
       },
     },
   });
 
-  function onSubmit(formData: any): void{
-    console.log(formData);
+  function onSubmit(formData: CutReviewVars): void{
+    mutation({ variables: formData })
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+      })
+      .catch(() => {
+        toast({ title: '감상평 등록 실패', status: 'error' });
+      });
   }
 
   return (
@@ -65,7 +79,9 @@ export function FilmCutReviewRegiModal({
         </ModalBody>
         <ModalFooter>
           <ButtonGroup>
-            <Button colorScheme="teal" type="submit">등록</Button>
+            <Button colorScheme="teal" type="submit" isDisabled={loading}>
+              등록
+            </Button>
             <Button onClick={onClose}>취소</Button>
           </ButtonGroup>
         </ModalFooter>
