@@ -24,6 +24,7 @@ import {
 } from '../../generated/graphql';
 
 import { FilmCutReview } from './FilmCutReview';
+import FilmCutReviewDeleteAlert from './FilmCutReviewDelete';
 import { FilmCutReviewRegiModal } from './FilmCutReviewRegiModal';
 
 interface MovieCutDetailProps {
@@ -139,6 +140,11 @@ export function FilmCutDetail({
         cutId={cutId}
         isOpen={reviewRegiDialog.isOpen}
         onClose={reviewRegiDialog.onClose}
+      />
+      <FilmCutReviewDeleteAlert
+        target={reviews?.find((review) => review.isMine)}
+        isOpen={deleteAlert.isOpen}
+        onClose={deleteAlert.onClose}
       />
     </Box>
   );
