@@ -77,3 +77,8 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 
 - `yarn add graphql-upload`
 - `yarn add --dev @types/graphql-upload`
+
+## dev 06 (project 폴더 > web)
+
+- `yarn add apollo-upload-client`
+- `yarn add --dev @types/apollo-upload-client`
