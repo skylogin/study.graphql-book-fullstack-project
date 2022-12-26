@@ -8,6 +8,8 @@ import { createDB } from './db/db-client';
 import createApolloServer from './apollo/createApolloServer';
 
 import { PORT, NODE_ENV } from './constants/constants';
+import { createSchema } from './apollo/createSchema';
+import { createSubscriptionServer } from './apollo/createSubscriptionServer';
 
 async function main() {
   await createDB();
@@ -16,7 +18,12 @@ async function main() {
   app.use(graphqlUploadExpress({ maxFileSize: 1024 * 1000 * 5, maxFiles: 1 }));
   app.use(express.static('public'));
 
-  const apolloServer = await createApolloServer();
+  const httpServer = http.createServer(app);
+
+  const schema = await createSchema();
+  await createSubscriptionServer(schema, httpServer);
+  const apolloServer = await createApolloServer(schema);
+
   await apolloServer.start();
   apolloServer.applyMiddleware({
     app,
@@ -25,8 +32,6 @@ async function main() {
       credentials: true,
     },
   });
-
-  const httpServer = http.createServer(app);
 
   httpServer.listen(PORT || 4000, () => {
     if (NODE_ENV !== 'production') {

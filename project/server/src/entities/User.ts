@@ -11,6 +11,7 @@ import {
 
 import { CutVote } from './CutVote';
 import { CutReview } from './CutReview';
+import Notification from './Notification';
 
 @ObjectType()
 @Entity()
@@ -47,4 +48,7 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => CutReview, (cutReview) => cutReview.user)
   cutReviews: CutReview[];
+
+  @OneToMany(() => Notification, (nofitication) => nofitication.user)
+  notifications: Notification[];
 }
