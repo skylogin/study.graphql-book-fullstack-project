@@ -72,3 +72,8 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 ## dev 05 (project 폴더 > server)
 
 - `yarn add dataloader`
+
+## dev 06 (project 폴더 > server)
+
+- `yarn add graphql-upload`
+- `yarn add --dev @types/graphql-upload`
