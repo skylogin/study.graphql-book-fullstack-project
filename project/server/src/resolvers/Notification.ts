@@ -1,4 +1,12 @@
-import { Ctx, Query, Resolver, UseMiddleware } from 'type-graphql';
+import {
+  Ctx, 
+  Int,
+  Arg,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware
+} from 'type-graphql';
 
 import { MyContext } from '../apollo/createApolloServer';
 import { isAuthenticated } from '../middlewares/isAuthenticated';
@@ -19,5 +27,18 @@ export class NotificationResolver {
       order: { createdAt: 'DESC' },
     });
     return notifications;
+  }
+
+  @UseMiddleware(isAuthenticated)
+  @Mutation(() => Notification)
+  async createNotification(
+    @Arg('userId', () => Int) userId: number,
+    @Arg('text') text: string,
+  ): Promise<Notification> {
+    const newNoti = await Notification.create({
+      text,
+      userId,
+    }).save();
+    return newNoti;
   }
 }
