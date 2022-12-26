@@ -10,6 +10,8 @@ import {
   useColorModeValue,
   useToast,
   useDisclosure,
+  SimpleGrid,
+  Center,
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { FaHeart } from 'react-icons/fa';
@@ -21,6 +23,7 @@ import {
   useMeQuery,
 } from '../../generated/graphql';
 
+import { FilmCutReview } from './FilmCutReview';
 import { FilmCutReviewRegiModal } from './FilmCutReviewRegiModal';
 
 interface MovieCutDetailProps {
@@ -28,12 +31,14 @@ interface MovieCutDetailProps {
   cutId: number;
   isVoted?: boolean;
   votesCount?: number;
+  reviews: CutQuery['cutReviews'];
 }
 export function FilmCutDetail({
   cutImg,
   cutId,
   isVoted = false,
   votesCount = 0,
+  reviews,
 }: MovieCutDetailProps): JSX.Element {
   const toast = useToast();
   const voteButtonColor = useColorModeValue('gray.500', 'gray.400');
@@ -66,6 +71,7 @@ export function FilmCutDetail({
     },
   });
   const reviewRegiDialog = useDisclosure();
+  const deleteAlert = useDisclosure();
 
   const accessToken = localStorage.getItem('access_token');
   const { data: userData } = useMeQuery({ skip: !accessToken });
@@ -106,6 +112,27 @@ export function FilmCutDetail({
             </Button>
           </HStack>
         </Flex>
+
+        <Box mt={6}>
+          {!reviews || reviews.length === 0 ? (
+            <Center minH={100}>
+              <Text>제일 먼저 감상을 남겨보세요!</Text>
+            </Center>
+          ): (
+            <SimpleGrid mt={3} spacing={4} columns={{ base:1, sm: 2 }}>
+              {reviews.slice(0, 2).map((review) => (
+                <FilmCutReview
+                  key={review.id}
+                  author={review.user.username}
+                  contents={review.contents}
+                  isMine={review.isMine}
+                  onEditClick={reviewRegiDialog.onOpen}
+                  onDeleteClick={deleteAlert.onOpen}
+                />
+              ))}
+            </SimpleGrid>
+          )}
+        </Box>
       </Box>
 
       <FilmCutReviewRegiModal
