@@ -162,3 +162,5 @@ bin/**
 yarn.lock
 
 .env
+
+**/public/**
