@@ -2,6 +2,12 @@ import { execute, GraphQLSchema, subscribe } from 'graphql';
 import http from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 
+import { JwtVerifiedUser, verifyAccessToken } from '../utils/jwt-auth';
+
+export interface MySubscriptionContext {
+  verifiedUser: JwtVerifiedUser | null;
+}
+
 export const createSubscriptionServer = async (
   schema: GraphQLSchema,
   server: http.Server,
@@ -12,7 +18,8 @@ export const createSubscriptionServer = async (
       execute,
       subscribe,
       onConnect: (connectionParams: any) => {
-        console.log('connected');
+        const accessToken = connectionParams.Authorization.split(' ')[1];
+        return { verifiedUser: verifyAccessToken(accessToken) };
       },
       onDisconnect: () => {
         console.log('disconnected');
