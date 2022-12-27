@@ -1,6 +1,9 @@
-import { ApolloClient, from, fromPromise, NormalizedCacheObject } from "@apollo/client";
+import { ApolloClient, from, fromPromise, NormalizedCacheObject, split, } from "@apollo/client";
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from "@apollo/client/utilities";
+
 import { createUploadLink } from 'apollo-upload-client';
 
 import { createApolloCache } from "./createApolloCache";
@@ -49,10 +52,35 @@ const httpUploadLink = createUploadLink({
   fetchOptions: 'include',
 });
 
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:4000/graphql',
+  options: {
+    reconnect: true,
+    connectionParams: () => {
+      const accessToken = localStorage.getItem('access_token');
+      return {
+        Authorization: accessToken ? `Bearer ${accessToken}`: '',
+      };
+    },
+  },
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  from([wsLink]),
+  from([authLink, errorLink, httpUploadLink as any]),
+);
+
 export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
   apolloClient = new ApolloClient({
     cache: createApolloCache(),
-    link: from([authLink, errorLink, httpUploadLink as any]),
+    link: splitLink,
   });
 
   return apolloClient;
