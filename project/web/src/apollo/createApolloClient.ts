@@ -50,6 +50,7 @@ const authLink = setContext((request, prevContext) => {
 const httpUploadLink = createUploadLink({
   uri: 'http://localhost:4000/graphql',
   fetchOptions: 'include',
+  credentials: 'include',
 });
 
 const wsLink = new WebSocketLink({
@@ -75,7 +76,7 @@ const splitLink = split(
   },
   from([wsLink]),
   from([authLink, errorLink, httpUploadLink as any]),
-);
+)
 
 export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
   apolloClient = new ApolloClient({

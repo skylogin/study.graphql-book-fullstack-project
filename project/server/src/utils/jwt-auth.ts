@@ -22,12 +22,12 @@ const createToken = (user: User, token: string, expire: string) => {
 };
 
 export const createAccessToken = (user: User): string => {
-  const expire = '15m';
+  const expire = '10m';
   return createToken(user, DEFAULT_JWT_SECRET_KEY, expire);
 };
 
 export const createRefreshToken = (user: User): string => {
-  const expire = '8h';
+  const expire = '24h';
   return createToken(user, REFRESH_JWT_SECRET_KEY, expire);
 };
 
