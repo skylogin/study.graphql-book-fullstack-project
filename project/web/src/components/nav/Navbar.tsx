@@ -15,8 +15,11 @@ import {
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+
 import { useLogoutMutation, useMeQuery, useUploadProfileImageMutation, } from '../../generated/graphql';
+
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
+import Notification from '../notification/Notification';
 
 const LoggedInNavbarItem = (): JSX.Element => {
   const client = useApolloClient();
@@ -57,6 +60,7 @@ const LoggedInNavbarItem = (): JSX.Element => {
   return (
     <Stack justify="flex-end" alignItems="center" direction="row" spacing={3}>
       <ColorModeSwitcher />
+      <Notification />
 
       <Menu>
         <MenuButton as={Button} rounded="full" variant="link" cursor="pointer">
