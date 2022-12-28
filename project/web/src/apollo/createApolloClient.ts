@@ -48,13 +48,13 @@ const authLink = setContext((request, prevContext) => {
 //   credentials: 'include',
 // });
 const httpUploadLink = createUploadLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: `${process.env.REACT_APP_API_HOST}/graphql`,
   fetchOptions: 'include',
   credentials: 'include',
 });
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:4000/graphql',
+  uri: `${process.env.REACT_APP_API_SUBSCRIPTION_HOST}/graphql`,
   options: {
     reconnect: true,
     connectionParams: () => {
