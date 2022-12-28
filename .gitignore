@@ -159,7 +159,6 @@ sketch
 
 
 bin/**
-yarn.lock
 
 .env
 
