@@ -37,11 +37,11 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 - `yarn add eslint-plugin-import`
 - `yarn add eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y`
 
-## dev 01 (project 폴더 > server)
+### dev 01 (project 폴더 > server)
 
 - `yarn add type-graphql`
 
-## dev 01 (project 폴더 > web)
+### dev 01 (project 폴더 > web)
 
 - `yarn add @apollo/client graphql`
 - `yarn add --dev @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo @graphql-codegen/add`
@@ -54,7 +54,7 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 - `yarn add react-lazyload`
 - `yarn add --dev @types/react-lazyload`
 
-## dev 03 (project 폴더 > server)
+### dev 03 (project 폴더 > server)
 
 - `yarn add typeorm mysql2`
 - `yarn add class-validator argon2`
@@ -65,24 +65,37 @@ GraphQL과 타입스크립트로 개발하는 웹서비스 (https://github.com/h
 - `yarn add cookie-parser`
 - `yarn add --dev @types/cookie-parser`
 
-## dev 04 (project 폴더 > web)
+### dev 04 (project 폴더 > web)
 
 - `yarn add react-hook-from`
 
-## dev 05 (project 폴더 > server)
+### dev 05 (project 폴더 > server)
 
 - `yarn add dataloader`
 
-## dev 06 (project 폴더 > server)
+### dev 06 (project 폴더 > server)
 
 - `yarn add graphql-upload`
 - `yarn add --dev @types/graphql-upload`
 - `yarn add graphql-subscriptions subscriptions-transport-ws`
 
-## dev 06 (project 폴더 > web)
+### dev 06 (project 폴더 > web)
 
 - `yarn add apollo-upload-client`
 - `yarn add --dev @types/apollo-upload-client`
 
-## dev 07 (project 폴더 > server)
+### dev 07 (project 폴더 > server)
+
 - `yarn add --dev @types/ws`
+
+
+## 도전과제
+
+- 내가 작성한 감상평 모아보기
+- 특정 유저가 작성한 감상평 모아보기
+- 좋아요 순 명장면 랭킹
+- 영화 및 감독 검색
+- 공유하기 기능
+- SNS 로그인
+- 키보드로 명장면 사진 넘기기
+- 명장면 사진 설명자료 추가하기
