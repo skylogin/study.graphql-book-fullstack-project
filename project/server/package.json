@@ -8,6 +8,7 @@
     "dev": "nodemon --watch *.ts --exec ts-node src/index.ts",
     "build": "tsc",
     "bundle": "zip server.zip -r dist package.json",
+    "bundleWin": "7z.exe a server.zip dist package.json",
     "start": "node dist/index.js"
   },
   "dependencies": {
@@ -38,7 +39,6 @@
     "@types/ioredis": "^4.28.1",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/nanoid": "^3.0.0",
-    "@types/ws": "^8.5.3",
     "nodemon": "^2.0.12",
     "ts-node": "^10.1.0"
   }
