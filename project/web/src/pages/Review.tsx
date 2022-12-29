@@ -5,7 +5,7 @@ import { useCutReviewsByUserQuery } from '../generated/graphql';
 
 import CommonLayout from '../components/CommonLayout';
 import ReviewCard from '../components/review/ReviewCard';
-import SearchInput from '../components/review/SearchInput';
+import ReviewSearch from '../components/review/ReviewSearch';
 
 interface ReviewPageParams {
   userId: string;
@@ -26,7 +26,7 @@ function Review(): React.ReactElement {
 
   return (
     <CommonLayout>
-      <SearchInput />
+      <ReviewSearch />
       <SimpleGrid columns={[2, null, 3]} spacing={[2, null, 10]}>
         {loading &&
           new Array(6).fill(0).map((x, i) => <Skeleton key={i} height="400px" />)}

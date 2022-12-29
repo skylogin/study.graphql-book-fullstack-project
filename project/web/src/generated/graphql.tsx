@@ -181,6 +181,7 @@ export type Query = {
 
 
 export type QueryFilmsArgs = {
+  keyword?: Maybe<Scalars['String']>;
   cursor?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 };
@@ -401,6 +402,7 @@ export type FilmQuery = (
 export type FilmsQueryVariables = Exact<{
   limit?: Maybe<Scalars['Int']>;
   cursor?: Maybe<Scalars['Int']>;
+  keyword?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -880,8 +882,8 @@ export type FilmQueryHookResult = ReturnType<typeof useFilmQuery>;
 export type FilmLazyQueryHookResult = ReturnType<typeof useFilmLazyQuery>;
 export type FilmQueryResult = Apollo.QueryResult<FilmQuery, FilmQueryVariables>;
 export const FilmsDocument = gql`
-    query Films($limit: Int, $cursor: Int) {
-  films(limit: $limit, cursor: $cursor) {
+    query Films($limit: Int, $cursor: Int, $keyword: String) {
+  films(limit: $limit, cursor: $cursor, keyword: $keyword) {
     cursor
     films {
       id
@@ -912,6 +914,7 @@ export const FilmsDocument = gql`
  *   variables: {
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
+ *      keyword: // value for 'keyword'
  *   },
  * });
  */

@@ -1,16 +1,29 @@
 import { Box, SimpleGrid, Skeleton } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { Waypoint } from 'react-waypoint';
 import { useFilmsQuery } from '../../generated/graphql';
 import FilmCard from './FilmCard';
 
-export default function FilmList(): JSX.Element {
+
+interface FilmListInputProps {
+  keyword: string | undefined;
+};
+
+export default function FilmList({
+  keyword = "",
+}: FilmListInputProps): JSX.Element {
   const LIMIT = 6;
-  const { data, loading, error, fetchMore } = useFilmsQuery({
+  const { data, loading, error, fetchMore, refetch } = useFilmsQuery({
     variables: {
       limit: LIMIT,
       cursor: 1,
+      keyword,
     }
   });
+
+  useEffect(() => {
+    refetch();
+  }, [keyword, refetch]);
 
   if(error) return <p>{error.message}</p>;
 
