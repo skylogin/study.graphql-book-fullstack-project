@@ -176,6 +176,7 @@ export type Query = {
   cut?: Maybe<Cut>;
   me?: Maybe<User>;
   cutReviews: Array<CutReview>;
+  cutReviewsByUser: Array<CutReview>;
 };
 
 
@@ -204,6 +205,11 @@ export type QueryCutReviewsArgs = {
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   cutId: Scalars['Int'];
+};
+
+
+export type QueryCutReviewsByUserArgs = {
+  id: Scalars['Int'];
 };
 
 /** 액세스 토큰 새로고침 반환데이터 */
@@ -433,6 +439,23 @@ export type NotificationsQuery = (
   & { notifications: Array<(
     { __typename?: 'Notification' }
     & Pick<Notification, 'id' | 'userId' | 'text' | 'createdAt' | 'updatedAt'>
+  )> }
+);
+
+export type CutReviewsByUserQueryVariables = Exact<{
+  cutReviewsByUserId: Scalars['Int'];
+}>;
+
+
+export type CutReviewsByUserQuery = (
+  { __typename?: 'Query' }
+  & { cutReviewsByUser: Array<(
+    { __typename?: 'CutReview' }
+    & Pick<CutReview, 'id' | 'contents' | 'cutId' | 'createdAt' | 'updatedAt'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username' | 'email'>
+    ) }
   )> }
 );
 
@@ -980,6 +1003,49 @@ export function useNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type NotificationsQueryHookResult = ReturnType<typeof useNotificationsQuery>;
 export type NotificationsLazyQueryHookResult = ReturnType<typeof useNotificationsLazyQuery>;
 export type NotificationsQueryResult = Apollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>;
+export const CutReviewsByUserDocument = gql`
+    query cutReviewsByUser($cutReviewsByUserId: Int!) {
+  cutReviewsByUser(id: $cutReviewsByUserId) {
+    id
+    contents
+    cutId
+    user {
+      username
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useCutReviewsByUserQuery__
+ *
+ * To run a query within a React component, call `useCutReviewsByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCutReviewsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCutReviewsByUserQuery({
+ *   variables: {
+ *      cutReviewsByUserId: // value for 'cutReviewsByUserId'
+ *   },
+ * });
+ */
+export function useCutReviewsByUserQuery(baseOptions: Apollo.QueryHookOptions<CutReviewsByUserQuery, CutReviewsByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CutReviewsByUserQuery, CutReviewsByUserQueryVariables>(CutReviewsByUserDocument, options);
+      }
+export function useCutReviewsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CutReviewsByUserQuery, CutReviewsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CutReviewsByUserQuery, CutReviewsByUserQueryVariables>(CutReviewsByUserDocument, options);
+        }
+export type CutReviewsByUserQueryHookResult = ReturnType<typeof useCutReviewsByUserQuery>;
+export type CutReviewsByUserLazyQueryHookResult = ReturnType<typeof useCutReviewsByUserLazyQuery>;
+export type CutReviewsByUserQueryResult = Apollo.QueryResult<CutReviewsByUserQuery, CutReviewsByUserQueryVariables>;
 export const NewNotificationDocument = gql`
     subscription newNotification {
   newNotification {

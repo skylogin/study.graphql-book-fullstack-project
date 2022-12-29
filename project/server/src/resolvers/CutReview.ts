@@ -21,6 +21,7 @@ import { isAuthenticated } from '../middlewares/isAuthenticated';
 
 import { CutReview } from '../entities/CutReview';
 import User from '../entities/User';
+import { Cut } from '../entities/Cut';
 
 @InputType()
 class CreateOrUpdateCutReviewInput {
@@ -76,6 +77,25 @@ export class CutReviewResolver {
     });
 
     if (reviewHistory) return [reviewHistory, ...reviews];
+    return reviews;
+  }
+
+  @Query(() => [CutReview])
+  @UseMiddleware(isAuthenticated)
+  async cutReviewsByUser(
+    @Arg('id', () => Int) id: number,
+    @Ctx() { verifiedUser }: MyContext,
+  ): Promise<CutReview[]> {
+    let userId = id;
+    if (!userId) {
+      userId = verifiedUser.userId;
+    }
+
+    const reviews = await CutReview.find({
+      where: { user: { id: userId } },
+      order: { updatedAt: 'DESC' },
+    });
+
     return reviews;
   }
 

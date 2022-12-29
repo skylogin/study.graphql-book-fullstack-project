@@ -13,8 +13,8 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useMemo } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useCallback, useMemo } from 'react';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 
 import { useLogoutMutation, useMeQuery, useUploadProfileImageMutation, } from '../../generated/graphql';
 
@@ -44,6 +44,9 @@ const LoggedInNavbarItem = (): JSX.Element => {
       });
     }
   }
+
+  const history = useHistory();
+  const onReviewClick = useCallback(() => history.push(`/review/${data?.me?.id}`), [data?.me?.id, history]);
   
   const [logout, { loading: logoutLoading }] = useLogoutMutation();
   async function onLogoutClick() {
@@ -83,6 +86,9 @@ const LoggedInNavbarItem = (): JSX.Element => {
               <Text>{data?.me?.email}</Text>
             </Box>
           </Flex>
+          <MenuItem onClick={onReviewClick}>
+            리뷰보기
+          </MenuItem>
           <MenuItem isDisabled={logoutLoading} onClick={onLogoutClick}>
             로그아웃
           </MenuItem>

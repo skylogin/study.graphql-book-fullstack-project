@@ -1,0 +1,13 @@
+query cutReviewsByUser($cutReviewsByUserId: Int!) {
+  cutReviewsByUser(id: $cutReviewsByUserId) {
+    id
+    contents
+    cutId
+    user {
+      username
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}
