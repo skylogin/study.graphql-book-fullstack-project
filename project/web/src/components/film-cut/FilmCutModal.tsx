@@ -9,7 +9,7 @@ import {
   Spinner,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCutQuery } from '../../generated/graphql';
 import { FilmCutDetail } from './FilmCutDetail';
 
@@ -17,18 +17,41 @@ interface FilmCutModalProps {
   open: boolean;
   onClose: () => void;
   cutId: number;
+  onLeft: () => void;
+  onRight: () => void;
 }
 
 function FilmCutModal({
   open,
   onClose,
   cutId,
+  onLeft,
+  onRight,
 }: FilmCutModalProps): React.ReactElement {
   const { loading, data } = useCutQuery({
     variables: { cutId: Number(cutId) },
   });
 
   const modalSize = useBreakpointValue({ base: 'full', md: 'xl' });
+
+  useEffect(() => {
+    const handleKeyboardEvent = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "ArrowLeft":
+          onLeft();
+          break;
+        case "ArrowRight":
+          onRight();
+          break;
+      }
+    };
+    document.addEventListener("keydown", handleKeyboardEvent, false);
+    return () => {
+      document.removeEventListener("keydown", handleKeyboardEvent, false);
+    };
+  }, [onLeft, onRight]);
+
+
 
   return (
     <Modal

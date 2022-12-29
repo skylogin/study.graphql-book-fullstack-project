@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Text, Spinner, useDisclosure } from '@chakra-ui/react';
+import { Box, Text, Spinner } from '@chakra-ui/react';
 import { useFilmQuery } from '../generated/graphql';
 
 import CommonLayout from '../components/CommonLayout';
 import FilmDetail from '../components/film/FilmDetail';
 import FilmCutList from '../components/film-cut/FilmCutList';
-import FilmCutModal from '../components/film-cut/FilmCutModal';
-
 
 interface FilmPageParams {
   filmId: string;
@@ -19,13 +17,6 @@ function Film(): React.ReactElement {
     variables: { filmId: Number(filmId) },
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedCutId, setSelectedCutId] = useState<number>();
-  const handleCutSelect = (cutId: number) => {
-    setSelectedCutId(cutId);
-    onOpen();
-  };
-
   return (
     <CommonLayout>
       { loading && <Spinner /> }
@@ -35,15 +26,11 @@ function Film(): React.ReactElement {
         <>
           <FilmDetail film={data.film} />
           <Box mt={12}>
-            <FilmCutList filmId={data.film.id} onClick={handleCutSelect} />
+            <FilmCutList filmId={data.film.id} />
           </Box>
         </>
       ) : (
         <Text>페이지를 표시할 수 없습니다.</Text>
-      )}
-
-      {!selectedCutId ? null : (
-        <FilmCutModal open={isOpen} onClose={onClose} cutId={selectedCutId} />
       )}
     </CommonLayout>
   );

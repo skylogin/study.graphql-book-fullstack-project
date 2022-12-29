@@ -60,7 +60,13 @@ export default function ReviewCard({ review }: ReviewCardProps): React.ReactElem
       </Box>
 
       {!selectedCutId ? null : (
-        <FilmCutModal open={isOpen} onClose={onClose} cutId={selectedCutId} />
+        <FilmCutModal 
+          open={isOpen} 
+          onClose={onClose} 
+          cutId={selectedCutId} 
+          onLeft={()=>{}}
+          onRight={()=>{}}
+        />
       )}
     </LinkBox>
   );

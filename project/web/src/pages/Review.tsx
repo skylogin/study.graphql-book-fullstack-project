@@ -20,9 +20,8 @@ function Review(): React.ReactElement {
   const toast = useToast();
   const history = useHistory();
   if(error){
-    console.log(error);
-    // toast({ title: '로그인을 해주세요.', status: 'error' });
-    // history.push("/");
+    toast({ title: '로그인을 해주세요.', status: 'error' });
+    history.push("/");
   } 
 
   return (
