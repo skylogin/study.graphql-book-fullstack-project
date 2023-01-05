@@ -47,6 +47,8 @@ const LoggedInNavbarItem = (): JSX.Element => {
 
   const history = useHistory();
   const onReviewClick = useCallback(() => history.push(`/review/${data?.me?.id}`), [data?.me?.id, history]);
+
+  const onRankClick = useCallback(() => history.push('/rank'), [history]);
   
   const [logout, { loading: logoutLoading }] = useLogoutMutation();
   async function onLogoutClick() {
@@ -88,6 +90,9 @@ const LoggedInNavbarItem = (): JSX.Element => {
           </Flex>
           <MenuItem onClick={onReviewClick}>
             리뷰보기
+          </MenuItem>
+          <MenuItem onClick={onRankClick}>
+            랭킹보기
           </MenuItem>
           <MenuItem isDisabled={logoutLoading} onClick={onLogoutClick}>
             로그아웃

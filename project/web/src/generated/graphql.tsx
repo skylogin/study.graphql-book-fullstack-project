@@ -173,6 +173,7 @@ export type Query = {
   films: PaginatedFilms;
   film?: Maybe<Film>;
   cuts: Array<Cut>;
+  cutsByVote: Array<Cut>;
   cut?: Maybe<Cut>;
   me?: Maybe<User>;
   cutReviews: Array<CutReview>;
@@ -379,6 +380,25 @@ export type CutsQuery = (
   & { cuts: Array<(
     { __typename?: 'Cut' }
     & Pick<Cut, 'id' | 'src'>
+  )> }
+);
+
+export type CutsByVoteQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CutsByVoteQuery = (
+  { __typename?: 'Query' }
+  & { cutsByVote: Array<(
+    { __typename?: 'Cut' }
+    & Pick<Cut, 'votesCount' | 'id' | 'src' | 'filmId'>
+    & { film?: Maybe<(
+      { __typename?: 'Film' }
+      & Pick<Film, 'title'>
+      & { director: (
+        { __typename?: 'Director' }
+        & Pick<Director, 'name'>
+      ) }
+    )> }
   )> }
 );
 
@@ -835,6 +855,49 @@ export function useCutsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CutsQ
 export type CutsQueryHookResult = ReturnType<typeof useCutsQuery>;
 export type CutsLazyQueryHookResult = ReturnType<typeof useCutsLazyQuery>;
 export type CutsQueryResult = Apollo.QueryResult<CutsQuery, CutsQueryVariables>;
+export const CutsByVoteDocument = gql`
+    query cutsByVote {
+  cutsByVote {
+    votesCount
+    id
+    src
+    filmId
+    film {
+      title
+      director {
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCutsByVoteQuery__
+ *
+ * To run a query within a React component, call `useCutsByVoteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCutsByVoteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCutsByVoteQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCutsByVoteQuery(baseOptions?: Apollo.QueryHookOptions<CutsByVoteQuery, CutsByVoteQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CutsByVoteQuery, CutsByVoteQueryVariables>(CutsByVoteDocument, options);
+      }
+export function useCutsByVoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CutsByVoteQuery, CutsByVoteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CutsByVoteQuery, CutsByVoteQueryVariables>(CutsByVoteDocument, options);
+        }
+export type CutsByVoteQueryHookResult = ReturnType<typeof useCutsByVoteQuery>;
+export type CutsByVoteLazyQueryHookResult = ReturnType<typeof useCutsByVoteLazyQuery>;
+export type CutsByVoteQueryResult = Apollo.QueryResult<CutsByVoteQuery, CutsByVoteQueryVariables>;
 export const FilmDocument = gql`
     query film($filmId: Int!) {
   film(filmId: $filmId) {

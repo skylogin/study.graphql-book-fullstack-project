@@ -1,0 +1,14 @@
+query cutsByVote {
+  cutsByVote {
+    votesCount
+    id
+    src
+    filmId
+    film {
+      title
+      director {
+        name
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
-import { Box, Image, LinkBox, LinkOverlay, SimpleGrid, Spinner, useDisclosure } from '@chakra-ui/react';
+import { Box, SimpleGrid, Spinner, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
-import LazyLoad from 'react-lazyload';
 
 import { useCutsQuery } from '../../generated/graphql';
 
+import Cut from '../film-cut/Cut';
 import FilmCutModal from '../film-cut/FilmCutModal';
 
 
@@ -20,13 +20,15 @@ function FilmCutList({ filmId }: FilmCutListProps): React.ReactElement {
     onOpen();
   };
 
-  const onLeft = (currentCutId: number) => {
-    if(currentCutId < 2) return;
+  const onLeft = (currentCutId: number, startNumber: number | undefined) => {
+    if (!startNumber) return;
+    if(startNumber && currentCutId < startNumber + 1) return;
     setSelectedCutId(currentCutId - 1);
   }
 
-  const onRight = (currentCutId: number, maxLength: number | undefined) => {
-    if(maxLength && currentCutId > maxLength-1) return;
+  const onRight = (currentCutId: number, endNumber: number | undefined) => {
+    if (!endNumber) return;
+    if (endNumber && currentCutId > endNumber - 1) return;
     setSelectedCutId(currentCutId + 1);
   }
 
@@ -41,23 +43,15 @@ function FilmCutList({ filmId }: FilmCutListProps): React.ReactElement {
   return (
     <SimpleGrid my={4} columns={[1, 2, null, 3]} spacing={[2, null, 8]}>
       {data?.cuts.map((cut) => (
-        <LazyLoad height={200} once key={cut.id}>
-          <LinkBox as="article">
-            <Box>
-              <LinkOverlay cursor="pointer" onClick={() => handleCutSelect(cut.id)}>
-                <Image src={cut.src}/>
-              </LinkOverlay>
-            </Box>
-          </LinkBox>
-        </LazyLoad>
+        <Cut key={cut.id} src={cut.src} handleCutSelect={() => handleCutSelect(cut.id)} />
       ))}
       {!selectedCutId ? null : (
         <FilmCutModal 
           open={isOpen} 
           onClose={onClose} 
           cutId={selectedCutId} 
-          onLeft={() => onLeft(selectedCutId)} 
-          onRight={() => onRight(selectedCutId, data?.cuts.length)} 
+          onLeft={() => onLeft(selectedCutId, data?.cuts[0].id)} 
+          onRight={() => onRight(selectedCutId, data?.cuts[data?.cuts.length-1].id)} 
         />
       )}
     </SimpleGrid>
