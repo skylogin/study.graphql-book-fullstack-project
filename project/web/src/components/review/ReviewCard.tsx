@@ -64,8 +64,8 @@ export default function ReviewCard({ review }: ReviewCardProps): React.ReactElem
           open={isOpen} 
           onClose={onClose} 
           cutId={selectedCutId} 
-          onLeft={()=>{}}
-          onRight={()=>{}}
+          onLeft={() => {}}
+          onRight={() => {}}
         />
       )}
     </LinkBox>
