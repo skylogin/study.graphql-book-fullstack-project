@@ -7,6 +7,7 @@ import { FilmResolver } from '../resolvers/Film';
 import { CutResolver } from '../resolvers/Cut';
 import { UserResolver } from '../resolvers/User';
 import { CutReviewResolver } from '../resolvers/CutReview';
+import { CutDescriptionResolver } from '../resolvers/CutDescription';
 
 export const createSchema = async (): Promise<GraphQLSchema> => {
   return buildSchema({
@@ -16,6 +17,7 @@ export const createSchema = async (): Promise<GraphQLSchema> => {
       UserResolver,
       CutReviewResolver,
       NotificationResolver,
+      CutDescriptionResolver,
     ],
     pubSub: new PubSub(),
   });
