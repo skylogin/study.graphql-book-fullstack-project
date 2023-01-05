@@ -59,6 +59,9 @@ export class CutDescriptionResolver {
       where: { id },
     });
     if (prevCutDescription) {
+      const user = new User();
+      user.id = verifiedUser.userId;
+      prevCutDescription.user = user;
       prevCutDescription.contents = contents;
       return prevCutDescription.save();
     }
