@@ -10,9 +10,10 @@ import {
   UseMiddleware,
 } from 'type-graphql';
 
-import { isAuthenticated } from '../middlewares/isAuthenticated';
 import { MyContext } from '../apollo/createApolloServer';
 import ghibliData from '../data/ghibli';
+
+import { isAuthenticated } from '../middlewares/isAuthenticated';
 
 import { Film } from '../entities/Film';
 import { Cut } from '../entities/Cut';
@@ -23,6 +24,33 @@ export class CutResolver {
   @Query(() => [Cut])
   cuts(@Arg('filmId', () => Int) filmId: Film['id']): Cut[] {
     return ghibliData.cuts.filter((x) => x.filmId === filmId);
+  }
+
+  @Query(() => [Cut])
+  async cutsByVote(): Promise<Cut[]> {
+    // 투표내역 가져오기
+    // const cutVote = await CutVote.createQueryBuilder('cutVote')
+    //   .select('cutVote.cutId AS cutId')
+    //   .addSelect('COUNT(*) AS cutCount')
+    //   .groupBy('cutVote.cutId')
+    //   .orderBy('cutCount', 'DESC')
+    //   .getRawMany();
+    const cutVote = await CutVote.find();
+    const cutIds = [...new Set(cutVote.map((e) => e.cutId))];
+
+    const cuts = ghibliData.cuts
+      .map((e) => {
+        const flag: Cut = cutIds.includes(e.id)
+          ? e
+          : { id: 0, filmId: 0, src: '' };
+
+        return flag;
+      })
+      .filter((e) => {
+        return e.id !== 0;
+      });
+
+    return cuts;
   }
 
   @Query(() => Cut, { nullable: true })
