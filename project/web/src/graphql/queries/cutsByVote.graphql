@@ -5,6 +5,7 @@ query cutsByVote {
     src
     filmId
     film {
+      id
       title
       director {
         name

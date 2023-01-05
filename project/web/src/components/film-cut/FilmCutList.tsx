@@ -1,7 +1,7 @@
 import { Box, SimpleGrid, Spinner, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 
-import { useCutsQuery } from '../../generated/graphql';
+import { useCutsQuery, Cut as CutProps } from '../../generated/graphql';
 
 import Cut from '../film-cut/Cut';
 import FilmCutModal from '../film-cut/FilmCutModal';
@@ -10,6 +10,7 @@ import FilmCutModal from '../film-cut/FilmCutModal';
 interface FilmCutListProps {
   filmId: number;
 }
+
 
 function FilmCutList({ filmId }: FilmCutListProps): React.ReactElement {
   const { data, loading } = useCutsQuery({ variables: { filmId } });
@@ -20,16 +21,31 @@ function FilmCutList({ filmId }: FilmCutListProps): React.ReactElement {
     onOpen();
   };
 
-  const onLeft = (currentCutId: number, startNumber: number | undefined) => {
-    if (!startNumber) return;
-    if(startNumber && currentCutId < startNumber + 1) return;
-    setSelectedCutId(currentCutId - 1);
+  let cutsData: any;
+  if (data?.cuts){
+    cutsData = [...data?.cuts];
   }
 
-  const onRight = (currentCutId: number, endNumber: number | undefined) => {
-    if (!endNumber) return;
-    if (endNumber && currentCutId > endNumber - 1) return;
-    setSelectedCutId(currentCutId + 1);
+  const onLeft = (currentCutId: number, cuts: [CutProps] | undefined) => {
+    if (!cuts) return;
+    const seq = getSequence(currentCutId, cuts, -1);
+    const target = cuts[seq]?.id;
+    if (target){
+      setSelectedCutId(target);
+    }
+  }
+
+  const onRight = (currentCutId: number, cuts: [CutProps] | undefined) => {
+    if (!cuts) return;
+    const seq = getSequence(currentCutId, cuts, +1);
+    const target = cuts[seq]?.id;
+    if (target){
+      setSelectedCutId(target);
+    }
+  }
+
+  const getSequence = (currentCutId: number, cuts: [CutProps], add: number) => {
+    return cuts.findIndex((e) => e.id === currentCutId) + add;
   }
 
   if(loading){
@@ -50,8 +66,8 @@ function FilmCutList({ filmId }: FilmCutListProps): React.ReactElement {
           open={isOpen} 
           onClose={onClose} 
           cutId={selectedCutId} 
-          onLeft={() => onLeft(selectedCutId, data?.cuts[0].id)} 
-          onRight={() => onRight(selectedCutId, data?.cuts[data?.cuts.length-1].id)} 
+          onLeft={() => onLeft(selectedCutId, cutsData)} 
+          onRight={() => onRight(selectedCutId, cutsData)} 
         />
       )}
     </SimpleGrid>

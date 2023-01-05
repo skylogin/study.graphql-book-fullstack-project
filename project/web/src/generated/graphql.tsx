@@ -393,7 +393,7 @@ export type CutsByVoteQuery = (
     & Pick<Cut, 'votesCount' | 'id' | 'src' | 'filmId'>
     & { film?: Maybe<(
       { __typename?: 'Film' }
-      & Pick<Film, 'title'>
+      & Pick<Film, 'id' | 'title'>
       & { director: (
         { __typename?: 'Director' }
         & Pick<Director, 'name'>
@@ -863,6 +863,7 @@ export const CutsByVoteDocument = gql`
     src
     filmId
     film {
+      id
       title
       director {
         name
