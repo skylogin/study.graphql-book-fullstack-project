@@ -17,6 +17,13 @@ export type Scalars = {
   Upload: any;
 };
 
+export type CreateOrUpdateCutDescriptionInput = {
+  /** 명장면 번호 */
+  id: Scalars['Int'];
+  /** 명장면 설명 */
+  contents: Scalars['String'];
+};
+
 export type CreateOrUpdateCutReviewInput = {
   /** 명장면 번호 */
   cutId: Scalars['Int'];
@@ -35,6 +42,19 @@ export type Cut = {
   film?: Maybe<Film>;
   votesCount: Scalars['Int'];
   isVoted: Scalars['Boolean'];
+};
+
+export type CutDescription = {
+  __typename?: 'CutDescription';
+  /** 명장면 번호 */
+  id: Scalars['Int'];
+  /** 명장면 설명 */
+  contents: Scalars['String'];
+  /** 생성 일자 */
+  createdAt: Scalars['String'];
+  /** 수정 일자 */
+  updatedAt: Scalars['String'];
+  user: User;
 };
 
 export type CutReview = {
@@ -113,6 +133,7 @@ export type Mutation = {
   uploadProfileImage: Scalars['Boolean'];
   createOrUpdateCutReview?: Maybe<CutReview>;
   deleteReview: Scalars['Boolean'];
+  createOrUpdateCutDescription?: Maybe<CutDescription>;
 };
 
 
@@ -151,6 +172,11 @@ export type MutationDeleteReviewArgs = {
   id: Scalars['Int'];
 };
 
+
+export type MutationCreateOrUpdateCutDescriptionArgs = {
+  cutDescriptionInput: CreateOrUpdateCutDescriptionInput;
+};
+
 export type Notification = {
   __typename?: 'Notification';
   id: Scalars['Int'];
@@ -178,6 +204,7 @@ export type Query = {
   me?: Maybe<User>;
   cutReviews: Array<CutReview>;
   cutReviewsByUser: Array<CutReview>;
+  cutDescription?: Maybe<CutDescription>;
 };
 
 
@@ -214,6 +241,11 @@ export type QueryCutReviewsByUserArgs = {
   id: Scalars['Int'];
 };
 
+
+export type QueryCutDescriptionArgs = {
+  cutId: Scalars['Int'];
+};
+
 /** 액세스 토큰 새로고침 반환데이터 */
 export type RefreshAccessTokenResponse = {
   __typename?: 'RefreshAccessTokenResponse';
@@ -246,6 +278,23 @@ export type User = {
   /** 업데이트 일자 */
   updatedAt: Scalars['String'];
 };
+
+export type CreateOrUpdateCutDescriptionMutationVariables = Exact<{
+  cutDescriptionInput: CreateOrUpdateCutDescriptionInput;
+}>;
+
+
+export type CreateOrUpdateCutDescriptionMutation = (
+  { __typename?: 'Mutation' }
+  & { createOrUpdateCutDescription?: Maybe<(
+    { __typename?: 'CutDescription' }
+    & Pick<CutDescription, 'id' | 'contents' | 'createdAt' | 'updatedAt'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username' | 'email'>
+    ) }
+  )> }
+);
 
 export type CreateOrUpdateCutReviewMutationVariables = Exact<{
   cutReviewInput: CreateOrUpdateCutReviewInput;
@@ -363,6 +412,13 @@ export type CutQuery = (
   )>, cutReviews: Array<(
     { __typename?: 'CutReview' }
     & Pick<CutReview, 'id' | 'contents' | 'isMine'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username' | 'email'>
+    ) }
+  )>, cutDescription?: Maybe<(
+    { __typename?: 'CutDescription' }
+    & Pick<CutDescription, 'id' | 'contents' | 'createdAt' | 'updatedAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'username' | 'email'>
@@ -493,6 +549,46 @@ export type NewNotificationSubscription = (
 );
 
 
+export const CreateOrUpdateCutDescriptionDocument = gql`
+    mutation createOrUpdateCutDescription($cutDescriptionInput: CreateOrUpdateCutDescriptionInput!) {
+  createOrUpdateCutDescription(cutDescriptionInput: $cutDescriptionInput) {
+    id
+    contents
+    createdAt
+    updatedAt
+    user {
+      username
+      email
+    }
+  }
+}
+    `;
+export type CreateOrUpdateCutDescriptionMutationFn = Apollo.MutationFunction<CreateOrUpdateCutDescriptionMutation, CreateOrUpdateCutDescriptionMutationVariables>;
+
+/**
+ * __useCreateOrUpdateCutDescriptionMutation__
+ *
+ * To run a mutation, you first call `useCreateOrUpdateCutDescriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrUpdateCutDescriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrUpdateCutDescriptionMutation, { data, loading, error }] = useCreateOrUpdateCutDescriptionMutation({
+ *   variables: {
+ *      cutDescriptionInput: // value for 'cutDescriptionInput'
+ *   },
+ * });
+ */
+export function useCreateOrUpdateCutDescriptionMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrUpdateCutDescriptionMutation, CreateOrUpdateCutDescriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrUpdateCutDescriptionMutation, CreateOrUpdateCutDescriptionMutationVariables>(CreateOrUpdateCutDescriptionDocument, options);
+      }
+export type CreateOrUpdateCutDescriptionMutationHookResult = ReturnType<typeof useCreateOrUpdateCutDescriptionMutation>;
+export type CreateOrUpdateCutDescriptionMutationResult = Apollo.MutationResult<CreateOrUpdateCutDescriptionMutation>;
+export type CreateOrUpdateCutDescriptionMutationOptions = Apollo.BaseMutationOptions<CreateOrUpdateCutDescriptionMutation, CreateOrUpdateCutDescriptionMutationVariables>;
 export const CreateOrUpdateCutReviewDocument = gql`
     mutation createOrUpdateCutReview($cutReviewInput: CreateOrUpdateCutReviewInput!) {
   createOrUpdateCutReview(cutReviewInput: $cutReviewInput) {
@@ -784,6 +880,16 @@ export const CutDocument = gql`
     id
     contents
     isMine
+    user {
+      username
+      email
+    }
+  }
+  cutDescription(cutId: $cutId) {
+    id
+    contents
+    createdAt
+    updatedAt
     user {
       username
       email

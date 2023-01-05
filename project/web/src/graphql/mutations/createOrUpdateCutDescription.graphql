@@ -1,0 +1,14 @@
+mutation createOrUpdateCutDescription(
+  $cutDescriptionInput: CreateOrUpdateCutDescriptionInput!
+) {
+  createOrUpdateCutDescription(cutDescriptionInput: $cutDescriptionInput) {
+    id
+    contents
+    createdAt
+    updatedAt
+    user {
+      username
+      email
+    }
+  }
+}

@@ -19,4 +19,15 @@ query cut($cutId: Int!) {
       email
     }
   }
+
+  cutDescription(cutId: $cutId) {
+    id
+    contents
+    createdAt
+    updatedAt
+    user {
+      username
+      email
+    }
+  }
 }
