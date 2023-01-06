@@ -26,6 +26,7 @@ import {
 import { FilmCutReview } from './FilmCutReview';
 import FilmCutReviewDeleteAlert from './FilmCutReviewDelete';
 import { FilmCutReviewRegiModal } from './FilmCutReviewRegiModal';
+import CutDescription from './CutDescription';
 
 interface MovieCutDetailProps {
   cutImg: string;
@@ -86,6 +87,9 @@ export function FilmCutDetail({
       <AspectRatio ratio={16 / 9}>
         <Image src={cutImg} objectFit="cover" fallbackSrc="" />
       </AspectRatio>
+      <Box py={4}>
+        <CutDescription cutId={cutId} isEditable={true} />
+      </Box>
 
       <Box py={4}>
         <Flex justify="space-between" alignItems="center">
