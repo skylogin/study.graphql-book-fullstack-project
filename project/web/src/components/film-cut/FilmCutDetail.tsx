@@ -88,7 +88,7 @@ export function FilmCutDetail({
         <Image src={cutImg} objectFit="cover" fallbackSrc="" />
       </AspectRatio>
       <Box py={4}>
-        <CutDescription cutId={cutId} isEditable={true} />
+        <CutDescription cutId={cutId} isEditable={!!isLoggedIn} />
       </Box>
 
       <Box py={4}>
