@@ -34,6 +34,7 @@ interface MovieCutDetailProps {
   isVoted?: boolean;
   votesCount?: number;
   reviews: CutQuery['cutReviews'];
+  description?: CutQuery['cutDescription'];
 }
 export function FilmCutDetail({
   cutImg,
@@ -41,6 +42,7 @@ export function FilmCutDetail({
   isVoted = false,
   votesCount = 0,
   reviews,
+  description,
 }: MovieCutDetailProps): JSX.Element {
   const toast = useToast();
   const voteButtonColor = useColorModeValue('gray.500', 'gray.400');
@@ -74,6 +76,7 @@ export function FilmCutDetail({
   });
   const reviewRegiDialog = useDisclosure();
   const deleteAlert = useDisclosure();
+  const descriptionRegiDialog = useDisclosure();
 
   const accessToken = localStorage.getItem('access_token');
   const { data: userData } = useMeQuery({ skip: !accessToken });
@@ -88,7 +91,14 @@ export function FilmCutDetail({
         <Image src={cutImg} objectFit="cover" fallbackSrc="" />
       </AspectRatio>
       <Box py={4}>
-        <CutDescription cutId={cutId} isEditable={!!isLoggedIn} />
+        <CutDescription 
+          cutId={cutId} 
+          cutDescription={description} 
+          isEditable={!!isLoggedIn} 
+          onOpen={descriptionRegiDialog.onOpen} 
+          isOpen={descriptionRegiDialog.isOpen} 
+          onClose={descriptionRegiDialog.onClose}
+        />
       </Box>
 
       <Box py={4}>

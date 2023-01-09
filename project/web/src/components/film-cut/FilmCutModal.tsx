@@ -79,6 +79,7 @@ function FilmCutModal({
               votesCount={data.cut.votesCount}
               isVoted={data.cut.isVoted}
               reviews={data.cutReviews}
+              description={data.cutDescription}
             />
           )}
         </ModalBody>

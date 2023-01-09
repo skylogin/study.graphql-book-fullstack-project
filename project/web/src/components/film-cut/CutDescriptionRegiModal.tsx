@@ -67,7 +67,7 @@ export function CutDescriptionRegiModal({
               query: CutDocument,
               data: {
                 ...currentCut,
-                cutDescription: currentCut.cutDescription
+                cutDescription: data.createOrUpdateCutDescription
               },
               variables: { cutId },
             });

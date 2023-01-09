@@ -1,32 +1,30 @@
-import { Box, SimpleGrid, Flex, Spinner, useDisclosure, Text, Button, Heading, useColorModeValue } from '@chakra-ui/react';
+import { SimpleGrid, Flex, Text, Button, Heading, useColorModeValue } from '@chakra-ui/react';
 
-import { useCutQuery } from '../../generated/graphql';
+import { CutQuery } from '../../generated/graphql';
 
 import { CutDescriptionRegiModal } from './CutDescriptionRegiModal';
 
 interface CutDescriptionProps {
-  cutId: number;
+  cutId: number,
+  cutDescription: CutQuery['cutDescription'];
   isEditable: boolean;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
 function CutDescription({ 
-  cutId, 
-  isEditable = false 
+  cutId,
+  cutDescription, 
+  isEditable = false ,
+  isOpen,
+  onOpen,
+  onClose,
 }: CutDescriptionProps): React.ReactElement {
-  const { data, loading } = useCutQuery({ variables: { cutId } });
-  const descriptionRegiDialog = useDisclosure();
-
-  if(loading){
-    return (
-      <Box textAlign="center" my={10}>
-        <Spinner />
-      </Box>
-    );
-  }
-
+  
   return (
     <Flex justify="space-between" alignItems="center">
-      {!data?.cutDescription? (
+      {!cutDescription? (
         <Text>명장면 설명이 아직 없습니다..</Text>
       ): (
         <SimpleGrid my={2} columns={[1, 1]}>
@@ -36,35 +34,36 @@ function CutDescription({
             fontSize="x1"
             fontFamily="body"
           >
-            {data?.cutDescription?.contents}
+            {cutDescription?.contents}
           </Heading>
           <Flex justify="space-between">
-            <Text as="time" dateTime={data?.cutDescription?.createdAt} isTruncated color="gray.500">
-              최초 작성: {new Date(parseInt(data?.cutDescription?.createdAt, 10)).toLocaleDateString()}
+            <Text as="time" dateTime={cutDescription?.createdAt} isTruncated color="gray.500">
+              최초 작성: {new Date(parseInt(cutDescription?.createdAt, 10)).toLocaleDateString()}
             </Text>
-            <Text as="time" dateTime={data?.cutDescription?.updatedAt} isTruncated color="gray.500">
-              최근 수정: {new Date(parseInt(data?.cutDescription?.updatedAt, 10)).toLocaleDateString()}
+            <Text as="time" dateTime={cutDescription?.updatedAt} isTruncated color="gray.500">
+              최근 수정: {new Date(parseInt(cutDescription?.updatedAt, 10)).toLocaleDateString()}
             </Text>
             <Text isTruncated>
-              {data?.cutDescription?.user.username} ({data?.cutDescription?.user.email})
+              {cutDescription?.user.username} ({cutDescription?.user.email})
             </Text>
           </Flex>
+
+          
         </SimpleGrid>
       )}
       
       {isEditable? (
-        <Button colorScheme="orange" onClick={descriptionRegiDialog.onOpen}>
+        <Button colorScheme="orange" onClick={onOpen}>
           설명수정
         </Button>
       ): null}
 
       <CutDescriptionRegiModal
         cutId={cutId}
-        isOpen={descriptionRegiDialog.isOpen}
-        onClose={descriptionRegiDialog.onClose}
+        isOpen={isOpen}
+        onClose={onClose}
       />
     </Flex>
-    
   );
 }
 
